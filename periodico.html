@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>El Diario | Periódico Digital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:wght@300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #0f0e0c;
+      --paper: #f5f0e8;
+      --cream: #ede8dc;
+      --accent: #c0392b;
+      --gold: #b8860b;
+      --muted: #6b6456;
+      --border: #c8bfae;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Source Serif 4', serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--ink);
+      color: var(--paper);
+      text-align: center;
+      padding: 0;
+      border-bottom: 4px solid var(--accent);
+      animation: slideDown 0.7s ease both;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--border);
+    }
+
+    .masthead {
+      padding: 28px 40px 18px;
+    }
+
+    .masthead h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--paper);
+    }
+
+    .masthead h1 span {
+      color: var(--accent);
+    }
+
+    .tagline {
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--border);
+      margin-top: 6px;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--cream);
+      border-bottom: 2px solid var(--ink);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 14px 28px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.12em;
+      color: var(--ink);
+      text-decoration: none;
+      border-right: 1px solid var(--border);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    nav ul li:first-child a { border-left: 1px solid var(--border); }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    /* BREAKING TICKER */
+    .ticker-wrap {
+      background: var(--accent);
+      color: #fff;
+      overflow: hidden;
+      padding: 7px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .ticker-label {
+      background: var(--ink);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.1em;
+      padding: 0 18px;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .ticker-track {
+      display: flex;
+      animation: ticker 40s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-track span {
+      padding: 0 40px;
+      font-size: 0.82rem;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 400;
+    }
+
+    .ticker-track span::after { content: "•"; margin-left: 40px; }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* MAIN CONTENT */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* SECTION HEADERS */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      margin-top: 60px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--ink);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .section-header:first-of-type { margin-top: 0; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-icon {
+      font-size: 1.8rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.1em;
+      color: var(--ink);
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* GRID */
+    .articles-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    /* Grid layouts per section */
+    .grid-sports    { grid-template-columns: 2fr 1fr 1fr; }
+    .grid-food      { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-fashion   { grid-template-columns: 1fr 2fr; }
+    .grid-entertain { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .grid-economy   { grid-template-columns: 3fr 2fr; }
+
+    @media (max-width: 850px) {
+      .articles-grid { grid-template-columns: 1fr 1fr !important; }
+    }
+    @media (max-width: 560px) {
+      .articles-grid { grid-template-columns: 1fr !important; }
+      nav ul { flex-wrap: wrap; }
+      nav ul li a { padding: 10px 14px; font-size: 0.88rem; }
+    }
+
+    /* CARD */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.13);
+    }
+
+    .card.featured {
+      grid-row: span 2;
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      background: var(--cream);
+      overflow: hidden;
+    }
+
+    .card-image-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      background: var(--cream);
+    }
+
+    .card.featured .card-image-placeholder {
+      aspect-ratio: 4/3;
+    }
+
+    .card-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      padding: 3px 10px;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .card-category {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .card-headline {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .card.featured .card-headline { font-size: 1.5rem; }
+    .card:not(.featured) .card-headline { font-size: 1.05rem; }
+
+    .card-excerpt {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--cream);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .card-meta .dot { color: var(--border); }
+
+    /* DIVIDER */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 60px 0 0;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--ink);
+      color: var(--border);
+      text-align: center;
+      padding: 36px 20px;
+      margin-top: 80px;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+    }
+
+    footer strong {
+      font-family: 'Playfair Display', serif;
+      color: var(--paper);
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="top-bar">
+    <span>Martes, 19 de Mayo de 2026</span>
+    <span>Edición #847</span>
+    <span>ISSN 2024-0001</span>
+  </div>
+  <div class="masthead">
+    <h1>El <span>Diario</span></h1>
+    <p class="tagline">Información que transforma · Noticias que importan</p>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#deportes">⚽ Deportes</a></li>
+    <li><a href="#comida">🍽 Comida</a></li>
+    <li><a href="#moda">👗 Moda</a></li>
+    <li><a href="#entretenimiento">🎬 Entretenimiento</a></li>
+    <li><a href="#economia">📈 Economía</a></li>
+  </ul>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-label">🔴 ÚLTIMA HORA</div>
+  <div class="ticker-track">
+    <span>Liga MX finaliza temporada con récord de asistencia</span>
+    <span>Nuevo restaurante de cocina fusión abre en CDMX</span>
+    <span>Semana de la Moda de Milán sorprende con diseños sustentables</span>
+    <span>Estreno global supera 200 millones de espectadores en 48 horas</span>
+    <span>Banco Central mantiene tasa de interés sin cambios</span>
+    <span>Liga MX finaliza temporada con récord de asistencia</span>
+    <span>Nuevo restaurante de cocina fusión abre en CDMX</span>
+    <span>Semana de la Moda de Milán sorprende con diseños sustentables</span>
+    <span>Estreno global supera 200 millones de espectadores en 48 horas</span>
+    <span>Banco Central mantiene tasa de interés sin cambios</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- ===== DEPORTES ===== -->
+  <div class="section-header" id="deportes">
+    <span class="section-icon">⚽</span>
+    <h2 class="section-title">Deportes</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="articles-grid grid-sports">
+    <div class="card featured">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#1a3a2a,#2d6a4f); font-size:5rem;">⚽</div>
+      <div class="card-tag">DESTACADO</div>
+      <div class="card-body">
+        <div class="card-category">Fútbol · Liga MX</div>
+        <h3 class="card-headline">América y Chivas definen el título en un Clásico Nacional histórico</h3>
+        <p class="card-excerpt">En un partido que mantuvo a millones de aficionados al borde del asiento, el clásico más esperado del año terminó en un empate dramático que fuerza un partido de desempate el próximo sábado. Ambos equipos mostraron un nivel de juego extraordinario.</p>
+        <div class="card-meta">
+          <span>Carlos Mendoza</span><span class="dot">·</span><span>Hace 2 horas</span><span class="dot">·</span><span>5 min lectura</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#1a237e,#283593);">🏀</div>
+      <div class="card-body">
+        <div class="card-category">Basketball · NBA</div>
+        <h3 class="card-headline">Jugador mexicano brilla en los playoffs de la NBA</h3>
+        <p class="card-excerpt">Con 34 puntos y 12 asistencias, el armador se convirtió en figura clave de la eliminatoria.</p>
+        <div class="card-meta">
+          <span>Ana Torres</span><span class="dot">·</span><span>Hace 4 horas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#b71c1c,#c62828);">🏊</div>
+      <div class="card-body">
+        <div class="card-category">Natación · Panamericano</div>
+        <h3 class="card-headline">México arrasa con 3 oros en el Panamericano de natación</h3>
+        <p class="card-excerpt">Los nadadores tricolores dominaron la jornada en los 100 metros libres, relevos y mariposa.</p>
+        <div class="card-meta">
+          <span>Pedro Ríos</span><span class="dot">·</span><span>Hace 6 horas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <!-- ===== COMIDA ===== -->
+  <div class="section-header" id="comida">
+    <span class="section-icon">🍽</span>
+    <h2 class="section-title">Comida</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="articles-grid grid-food">
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#e65100,#bf360c);">🌮</div>
+      <div class="card-body">
+        <div class="card-category">Gastronomía · Nacional</div>
+        <h3 class="card-headline">La taquería más antigua de CDMX celebra 100 años de historia</h3>
+        <p class="card-excerpt">Un siglo después, el recetario original sigue intacto. Sus tacos de canasta siguen siendo un ícono culinario capitalino con fila de dos horas cada mañana.</p>
+        <div class="card-meta">
+          <span>Sofía Luna</span><span class="dot">·</span><span>Hoy</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#558b2f,#33691e);">🥗</div>
+      <div class="card-tag">TENDENCIA</div>
+      <div class="card-body">
+        <div class="card-category">Nutrición · Tendencias</div>
+        <h3 class="card-headline">La dieta mediterránea llega a México con ingredientes locales</h3>
+        <p class="card-excerpt">Chefs y nutriólogos se unen para crear versiones accesibles que mezclan los beneficios del aceite de oliva con la riqueza del chile y el epazote.</p>
+        <div class="card-meta">
+          <span>Luis Vargas</span><span class="dot">·</span><span>Hace 3 horas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#4a148c,#6a1b9a);">🍫</div>
+      <div class="card-body">
+        <div class="card-category">Repostería · Internacional</div>
+        <h3 class="card-headline">Cacao mexicano gana el primer lugar en concurso mundial de chocolate</h3>
+        <p class="card-excerpt">Un productor oaxaqueño supera a Bélgica y Suiza con su variedad criollo puro. El jurado destacó notas florales únicas.</p>
+        <div class="card-meta">
+          <span>María Campos</span><span class="dot">·</span><span>Hace 5 horas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <!-- ===== MODA ===== -->
+  <div class="section-header" id="moda">
+    <span class="section-icon">👗</span>
+    <h2 class="section-title">Moda</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="articles-grid grid-fashion">
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#880e4f,#ad1457);">👠</div>
+      <div class="card-body">
+        <div class="card-category">Tendencias · Global</div>
+        <h3 class="card-headline">El regreso del maximalismo: más color, más textura, más atrevimiento</h3>
+        <p class="card-excerpt">Tras años de minimalismo, las pasarelas explotan en estampados, pieles sintéticas y accesorios de gran formato. Los diseñadores apuestan por una moda que no pide disculpas.</p>
+        <div class="card-meta">
+          <span>Valentina Cruz</span><span class="dot">·</span><span>Hace 1 hora</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card featured">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#37474f,#546e7a); font-size:5rem;">✨</div>
+      <div class="card-tag">EXCLUSIVO</div>
+      <div class="card-body">
+        <div class="card-category">Diseñadores · México</div>
+        <h3 class="card-headline">Diseñadores mexicanos conquistan la Semana de la Moda de Milán con colección inspirada en Oaxaca</h3>
+        <p class="card-excerpt">Tres casas de diseño mexicanas presentaron colecciones que fusionan bordados zapotecas con cortes de alta costura, recibiendo ovaciones y contratos con boutiques europeas. Un momento histórico para la moda latinoamericana que demuestra que la identidad cultural es el lujo más auténtico.</p>
+        <div class="card-meta">
+          <span>Camila Rojas</span><span class="dot">·</span><span>Hoy</span><span class="dot">·</span><span>8 min lectura</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <!-- ===== ENTRETENIMIENTO ===== -->
+  <div class="section-header" id="entretenimiento">
+    <span class="section-icon">🎬</span>
+    <h2 class="section-title">Entretenimiento</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="articles-grid grid-entertain">
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#1a237e,#283593);">🎬</div>
+      <div class="card-tag">ESTRENO</div>
+      <div class="card-body">
+        <div class="card-category">Cine · Latinoamérica</div>
+        <h3 class="card-headline">Película mexicana lidera las taquillas mundiales en su primera semana</h3>
+        <p class="card-excerpt">La producción dirigida por una cineasta tapatía supera a blockbusters de Hollywood en 35 países.</p>
+        <div class="card-meta"><span>Hace 2 horas</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#006064,#00838f);">🎵</div>
+      <div class="card-body">
+        <div class="card-category">Música · Streaming</div>
+        <h3 class="card-headline">Artista regional mexicano rompe récord de Spotify con álbum debut</h3>
+        <p class="card-excerpt">200 millones de streams en 48 horas convierten el disco en el más escuchado de la historia del género.</p>
+        <div class="card-meta"><span>Hace 3 horas</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#33691e,#558b2f);">📺</div>
+      <div class="card-body">
+        <div class="card-category">Televisión · Series</div>
+        <h3 class="card-headline">Serie de Netflix basada en historia prehispánica arrasa en 70 países</h3>
+        <p class="card-excerpt">La producción, rodada íntegramente en náhuatl y español, se convierte en fenómeno global.</p>
+        <div class="card-meta"><span>Hace 5 horas</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#4a148c,#7b1fa2);">🎮</div>
+      <div class="card-body">
+        <div class="card-category">Videojuegos · E-Sports</div>
+        <h3 class="card-headline">Equipo mexicano de e-sports gana campeonato mundial en Seúl</h3>
+        <p class="card-excerpt">Tras dos años de preparación, los jugadores se coronan en el torneo más competido del mundo.</p>
+        <div class="card-meta"><span>Hace 7 horas</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <!-- ===== ECONOMÍA ===== -->
+  <div class="section-header" id="economia">
+    <span class="section-icon">📈</span>
+    <h2 class="section-title">Economía</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="articles-grid grid-economy">
+    <div class="card featured">
+      <div class="card-image-placeholder" style="background: linear-gradient(135deg,#1b5e20,#2e7d32); font-size:4rem;">📊</div>
+      <div class="card-tag">ANÁLISIS</div>
+      <div class="card-body">
+        <div class="card-category">Macroeconomía · México</div>
+        <h3 class="card-headline">PIB de México crece 4.2% en el primer trimestre: el mayor aumento en una década</h3>
+        <p class="card-excerpt">Los sectores manufacturero y tecnológico lideran la expansión económica, impulsados por inversión extranjera directa récord y el nearshoring. Economistas advierten que sostener el ritmo requerirá reformas estructurales clave en infraestructura y educación técnica para los próximos años.</p>
+        <div class="card-meta">
+          <span>Dr. Ernesto Gil</span><span class="dot">·</span><span>Hoy</span><span class="dot">·</span><span>10 min lectura</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:24px;">
+      <div class="card">
+        <div class="card-image-placeholder" style="background: linear-gradient(135deg,#e65100,#f57c00);">💵</div>
+        <div class="card-body">
+          <div class="card-category">Finanzas · Tipo de Cambio</div>
+          <h3 class="card-headline">Peso mexicano se fortalece ante el dólar por cuarta semana consecutiva</h3>
+          <p class="card-excerpt">La moneda nacional cotiza en su nivel más alto en 18 meses gracias a la estabilidad política y datos positivos de empleo.</p>
+          <div class="card-meta">
+            <span>Lucía Herrera</span><span class="dot">·</span><span>Hace 1 hora</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-image-placeholder" style="background: linear-gradient(135deg,#0d47a1,#1565c0);">🏦</div>
+        <div class="card-body">
+          <div class="card-category">Startups · Tecnología</div>
+          <h3 class="card-headline">Unicornio fintech mexicano cierra ronda de $500 millones USD</h3>
+          <p class="card-excerpt">La empresa de pagos digitales se convierte en la startup más valiosa de Latinoamérica tras la inversión.</p>
+          <div class="card-meta">
+            <span>Jorge Salas</span><span class="dot">·</span><span>Hace 4 horas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <strong>El Diario</strong>
+  <p>© 2026 El Diario Digital · Todos los derechos reservados</p>
+  <p style="margin-top:8px;">Martes, 19 de Mayo de 2026 · Edición #847</p>
+</footer>
+
+<script>
+  // Active nav on scroll
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Stagger card animations
+  const cards = document.querySelectorAll('.card');
+  const cardObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.animation = `fadeUp 0.5s ease ${i * 0.07}s both`;
+        cardObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(c => cardObs.observe(c));
+</script>
+
+</body>
+</html>
